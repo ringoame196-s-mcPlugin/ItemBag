@@ -11,6 +11,6 @@ class Main : JavaPlugin() {
         saveResource("data.db", false)
         server.pluginManager.registerEvents(Events(), plugin)
         val command = getCommand("itembag")
-        command!!.setExecutor(Command())
+        command!!.setExecutor(Command(plugin))
     }
 }

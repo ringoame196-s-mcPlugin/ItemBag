@@ -1,5 +1,7 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
+import com.github.ringoame196_s_mcPlugin.ItemBagManager
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.command.Command
@@ -7,15 +9,33 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
-class Command : CommandExecutor, TabCompleter {
+class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
+    private val itemBagManager = ItemBagManager(plugin)
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
             val message = "${ChatColor.RED}Can Only Players"
             sender.sendMessage(message)
             return true
         }
+
+        val subCommand = args[0]
+        when (subCommand) {
+            CommandConst.GIVE_COMMAND -> giveCommand(sender, args)
+        }
+
         return true
+    }
+
+    private fun giveCommand(player: Player, args: Array<out String>) {
+        val selectPlayers = Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>().toMutableList()
+        for (selectPlayer in selectPlayers) {
+            val message = "${ChatColor.AQUA}${selectPlayer.displayName}にバッグを与えました"
+            itemBagManager.give(selectPlayer)
+            player.sendMessage(message)
+        }
     }
 
     override fun onTabComplete(commandSender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
@@ -28,13 +48,15 @@ class Command : CommandExecutor, TabCompleter {
                 CommandConst.PASS_COMMAND,
                 CommandConst.RELEASE_COMMAND
             )
-            // パスワード記入
             2 -> {
                 when (args[0]) {
+                    // パスワード記入
                     CommandConst.OPEN_COMMAND, CommandConst.PASS_COMMAND, CommandConst.RELEASE_COMMAND -> {
                         processPasswordInput(sender, args)
                         return mutableListOf("[パスワード]")
                     }
+                    // プレイヤー指定
+                    CommandConst.GIVE_COMMAND -> return (Bukkit.getOnlinePlayers().map { it.name } + "@a" + "@p" + "@r" + "@s").toMutableList()
                 }
             }
         }
