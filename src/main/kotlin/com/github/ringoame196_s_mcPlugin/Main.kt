@@ -8,6 +8,7 @@ class Main : JavaPlugin() {
     private val plugin = this
     override fun onEnable() {
         super.onEnable()
+        saveResource("data.db", false)
         server.pluginManager.registerEvents(Events(), plugin)
         val command = getCommand("itembag")
         command!!.setExecutor(Command())
