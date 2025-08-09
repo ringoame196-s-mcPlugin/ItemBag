@@ -27,9 +27,12 @@ repositories {
 val shadowImplementation: Configuration by configurations.creating
 configurations["implementation"].extendsFrom(shadowImplementation)
 
+val sqliteVersion = "3.46.1.0"
+
 dependencies {
     shadowImplementation(kotlin("stdlib"))
     compileOnly("org.spigotmc:spigot-api:$pluginVersion-R0.1-SNAPSHOT")
+    implementation("org.xerial:sqlite-jdbc:$sqliteVersion") // SQLLite
 }
 
 configure<BukkitPluginDescription> {
