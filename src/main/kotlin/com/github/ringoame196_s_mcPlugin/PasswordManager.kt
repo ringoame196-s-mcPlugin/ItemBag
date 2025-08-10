@@ -20,7 +20,15 @@ class PasswordManager(plugin: Plugin) {
     }
 
     fun isLock(id: String): Boolean {
-        return true
+        val sql = "SELECT EXISTS(SELECT 1 FROM $table WHERE ${DataBaseConst.ID_KEY} = ?) AS exists_flag;"
+        val result = dataBaseManager.acquisitionValue(sql, mutableListOf(id), "exists_flag")
+        return when (result) {
+            is Boolean -> result
+            is Int -> result != 0
+            is Long -> result != 0L
+            is String -> result == "1" || result.equals("true", ignoreCase = true)
+            else -> false
+        }
     }
 
     private fun hashSHA256(input: String): String {
