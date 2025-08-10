@@ -111,6 +111,17 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
                     player.sendMessage(message)
                 }
             }
+
+            CommandConst.RELEASE_COMMAND -> {
+                if (passWordManager.auth(id, password)) {
+                    val message = "${ChatColor.DARK_RED}パスワードを解除しました"
+                    passWordManager.delete(id)
+                    player.sendMessage(message)
+                } else {
+                    val message = "${ChatColor.RED}パスワードが違います"
+                    player.sendMessage(message)
+                }
+            }
         }
     }
 
