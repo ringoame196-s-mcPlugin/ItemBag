@@ -1,6 +1,7 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
 import com.github.ringoame196_s_mcPlugin.ItemBagManager
+import com.github.ringoame196_s_mcPlugin.PasswordManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
@@ -81,6 +82,23 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
         val sound = Sound.BLOCK_ANVIL_USE
         player.sendMessage(message)
         player.playSound(player, sound, 1f, 1f)
+
+        val item = player.inventory.itemInHand
+        val id = itemBagManager.getBagID(item)
+
+        if (id == null) {
+            val message = "${ChatColor.RED}バッグをメインハンドに持ちコマンドを実行してください"
+            player.sendMessage(message)
+            return
+        }
+
+        when (subCommand) {
+            CommandConst.PASS_COMMAND -> {
+                val message = "${ChatColor.GOLD}パスワードを設定しました"
+                passWordManager.set(id, password)
+                player.sendMessage(message)
+            }
+        }
     }
 
     private fun sendEntryPassWord(player: Player) {
