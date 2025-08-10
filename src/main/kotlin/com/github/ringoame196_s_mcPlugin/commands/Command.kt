@@ -102,9 +102,14 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
 
         when (subCommand) {
             CommandConst.PASS_COMMAND -> {
-                val message = "${ChatColor.GOLD}パスワードを設定しました"
-                passWordManager.set(id, password)
-                player.sendMessage(message)
+                if (passWordManager.isLock(id)) {
+                    val message = "${ChatColor.RED}既にパスワードがかかっています"
+                    player.sendMessage(message)
+                } else {
+                    val message = "${ChatColor.GOLD}パスワードを設定しました"
+                    passWordManager.set(id, password)
+                    player.sendMessage(message)
+                }
             }
         }
     }
