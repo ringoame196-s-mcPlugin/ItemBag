@@ -14,6 +14,11 @@ class PasswordManager(plugin: Plugin) {
         dataBaseManager.executeUpdate(sql, mutableListOf(id, hashPassword))
     }
 
+    fun delete(id: String) {
+        val sql = "DELETE FROM $table WHERE ${DataBaseConst.ID_KEY} = ?;"
+        dataBaseManager.executeUpdate(sql, mutableListOf(id))
+    }
+
     fun auth(id: String, password: String): Boolean {
         if (!isLock(id)) return true
         val hashPassword = hashSHA256(password)
