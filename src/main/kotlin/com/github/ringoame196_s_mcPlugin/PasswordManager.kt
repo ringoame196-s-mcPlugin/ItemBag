@@ -15,6 +15,7 @@ class PasswordManager(plugin: Plugin) {
     }
 
     fun auth(id: String, password: String): Boolean {
+        if (isLock(id)) return true
         val hashPassword = hashSHA256(password)
         return true
     }
