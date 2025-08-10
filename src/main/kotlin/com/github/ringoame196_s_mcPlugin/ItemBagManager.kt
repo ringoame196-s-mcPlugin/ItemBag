@@ -20,17 +20,18 @@ class ItemBagManager(plugin: Plugin) {
     }
 
     private fun makeItem(): ItemStack {
-        val uuid = UUID.randomUUID().toString()
+        val id = UUID.randomUUID().toString()
         val item = ItemStack(material)
         val meta = item.itemMeta ?: return item
         meta.setDisplayName(name)
-        meta.persistentDataContainer.set(idKey, PersistentDataType.STRING, uuid)
+        meta.lore = mutableListOf("${ChatColor.AQUA}id:$id")
+        meta.persistentDataContainer.set(idKey, PersistentDataType.STRING, id)
         item.itemMeta = meta
         return item
     }
 
     fun getBagID(item: ItemStack): String? {
-            val meta = item.itemMeta ?: return null
-            return meta.persistentDataContainer.get(idKey, PersistentDataType.STRING)
-        }
+        val meta = item.itemMeta ?: return null
+        return meta.persistentDataContainer.get(idKey, PersistentDataType.STRING)
     }
+}
