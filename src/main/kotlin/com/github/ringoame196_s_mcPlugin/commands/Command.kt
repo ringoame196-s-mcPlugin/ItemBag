@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin
 
 class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     private val itemBagManager = ItemBagManager(plugin)
+    private val passWordManager = PasswordManager(plugin)
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
@@ -31,11 +32,18 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     }
 
     private fun giveCommand(player: Player, args: Array<out String>) {
-        val selectPlayers = Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>().toMutableList()
-        for (selectPlayer in selectPlayers) {
-            val message = "${ChatColor.AQUA}${selectPlayer.displayName}にバッグを与えました"
-            itemBagManager.give(selectPlayer)
+        val selectPlayers = if (args.size > 1) Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>().toMutableList()
+        else mutableListOf(player)
+
+        if (selectPlayers.isEmpty()) {
+            val message = "${ChatColor.RED}エンティティが見つかりませんでした"
             player.sendMessage(message)
+        } else {
+            for (selectPlayer in selectPlayers) {
+                val message = "${ChatColor.AQUA}${selectPlayer.displayName}にバッグを与えました"
+                itemBagManager.give(selectPlayer)
+                player.sendMessage(message)
+            }
         }
     }
 
