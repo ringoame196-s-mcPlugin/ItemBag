@@ -22,7 +22,7 @@ class PasswordManager(plugin: Plugin) {
     fun auth(id: String, password: String): Boolean {
         if (!isLock(id)) return true
         val hashPassword = hashSHA256(password)
-        val sql = "SELECT EXISTS(SELECT 1 FROM $table WHERE ${DataBaseConst.ID_KEY} = ?,${DataBaseConst.PASS_KEY} = ?) AS exists_flag;"
+        val sql = "SELECT EXISTS(SELECT 1 FROM $table WHERE ${DataBaseConst.ID_KEY} = ? AND ${DataBaseConst.PASS_KEY} = ?) AS exists_flag;"
         val result = dataBaseManager.acquisitionValue(sql, mutableListOf(id, hashPassword), "exists_flag")
         return when (result) {
             is Boolean -> result
