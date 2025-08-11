@@ -19,8 +19,10 @@ class PasswordManager(plugin: Plugin) {
         dataBaseManager.executeUpdate(sql, mutableListOf(id))
     }
 
-    fun auth(id: String, password: String): Boolean {
+    fun auth(id: String, password: String?): Boolean {
+        if (!isLock(id) && password == null) return true
         if (!isLock(id)) return true
+        password ?: return false
         val hashPassword = hashSHA256(password)
         val sql = "SELECT EXISTS(SELECT 1 FROM $table WHERE ${DataBaseConst.ID_KEY} = ? AND ${DataBaseConst.PASS_KEY} = ?) AS exists_flag;"
         val result = dataBaseManager.acquisitionValue(sql, mutableListOf(id, hashPassword), "exists_flag")
