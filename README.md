@@ -3,11 +3,15 @@
 ## プラグイン説明
 アイテムをいれることができるバッグを追加する
 
+
+https://github.com/user-attachments/assets/5261987c-d945-4785-b1c2-0af5eb5fbd07
+
+
 ## プラグインダウンロード
 [ダウンロードリンク](https://github.com/ringoame196-s-mcPlugin/ItemBag/releases/latest)
 
 ## コマンド
-/itembag <give|open|pass|release> [<password>]
+/itembag <give|open|pass|release> [password]
 
 | コマンド名 | 説明                       | 権限 |
 | --- |--------------------------| --- |
