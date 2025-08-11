@@ -1,12 +1,15 @@
 package com.github.ringoame196_s_mcPlugin
 
 import org.bukkit.Bukkit
+import org.bukkit.plugin.Plugin
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.SQLException
 
-class DataBaseManager(private val dbFilePath: String) {
+class DataBaseManager(plugin: Plugin) {
+    private val dbFilePath = "${plugin.dataFolder.path}/data.db"
+
     /**
      * SQLコマンドを実行する
      * @param command 実行するSQL文
@@ -72,6 +75,40 @@ class DataBaseManager(private val dbFilePath: String) {
             Bukkit.getLogger().info("SQL Error: ${e.message}")
             throw e
             return mapOf()
+        }
+    }
+
+    fun acquisitionValuesList(
+        sql: String,
+        parameters: List<Any> = emptyList(),
+        keys: List<String>
+    ): List<Map<String, Any?>> {
+        try {
+            val results = mutableListOf<Map<String, Any?>>()
+
+            connection.use { conn ->
+                conn.prepareStatement(sql).use { preparedStatement ->
+                    parameters.bindParameters(preparedStatement)
+                    preparedStatement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val row = mutableMapOf<String, Any?>()
+                            for (key in keys) {
+                                row[key] = try {
+                                    resultSet.getString(key)
+                                } catch (e: SQLException) {
+                                    null
+                                }
+                            }
+                            results.add(row)
+                        }
+                    }
+                }
+            }
+
+            return results
+        } catch (e: SQLException) {
+            Bukkit.getLogger().info("SQL Error: ${e.message}")
+            throw e
         }
     }
 
