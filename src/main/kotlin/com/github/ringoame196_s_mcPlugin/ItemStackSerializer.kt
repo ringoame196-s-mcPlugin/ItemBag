@@ -8,19 +8,19 @@ import java.io.ByteArrayOutputStream
 import java.util.Base64
 
 object ItemStackSerializer {
-	fun itemStackToBase64(item: ItemStack): String {
-		val outputStream = ByteArrayOutputStream()
-		val dataOutput = BukkitObjectOutputStream(outputStream)
-		dataOutput.writeObject(item)
-		dataOutput.close()
-		return Base64.getEncoder().encodeToString(outputStream.toByteArray())
-	}
+    fun itemStackToBase64(item: ItemStack): String {
+        val outputStream = ByteArrayOutputStream()
+        val dataOutput = BukkitObjectOutputStream(outputStream)
+        dataOutput.writeObject(item)
+        dataOutput.close()
+        return Base64.getEncoder().encodeToString(outputStream.toByteArray())
+    }
 
-	fun itemStackFromBase64(data: String): ItemStack {
-		val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(data))
-		val dataInput = BukkitObjectInputStream(inputStream)
-		val item = dataInput.readObject() as ItemStack
-		dataInput.close()
-		return item
-	}
+    fun itemStackFromBase64(data: String): ItemStack {
+        val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(data))
+        val dataInput = BukkitObjectInputStream(inputStream)
+        val item = dataInput.readObject() as ItemStack
+        dataInput.close()
+        return item
+    }
 }
