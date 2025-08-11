@@ -93,37 +93,40 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
         val id = getBagID(player) ?: return
 
         when (subCommand) {
-            CommandConst.PASS_COMMAND -> {
-                val message: String
-                val sound: Sound
-                if (passWordManager.isLock(id)) {
-                    message = "${ChatColor.RED}既にパスワードがかかっています"
-                    sound = Sound.BLOCK_NOTE_BLOCK_BELL
-                } else {
-                    message = "${ChatColor.GOLD}パスワードを設定しました"
-                    sound = Sound.BLOCK_ANVIL_USE
-                    passWordManager.set(id, password)
-                }
-                player.sendMessage(message)
-                player.playSound(player,sound,1f,1f)
-            }
-
-            CommandConst.RELEASE_COMMAND -> {
-                val message: String
-                val sound: Sound
-                if (passWordManager.auth(id, password)) {
-                    message = "${ChatColor.DARK_RED}パスワードを解除しました"
-                    sound = Sound.BLOCK_ANVIL_USE
-                    passWordManager.delete(id)
-                } else {
-                    message = "${ChatColor.RED}パスワードが違います"
-                    sound = Sound.BLOCK_NOTE_BLOCK_BELL
-                }
-                player.sendMessage(message)
-                player.playSound(player,sound,1f,1f)
-            }
+            CommandConst.PASS_COMMAND -> passCommand(player, id, password)
+            CommandConst.RELEASE_COMMAND -> releaseCommand(player, id, password)
             CommandConst.OPEN_COMMAND -> itemBagManager.openInv(player, id, password)
         }
+    }
+
+    private fun passCommand(player: Player, id: String, password: String) {
+        val message: String
+        val sound: Sound
+        if (passWordManager.isLock(id)) {
+            message = "${ChatColor.RED}既にパスワードがかかっています"
+            sound = Sound.BLOCK_NOTE_BLOCK_BELL
+        } else {
+            message = "${ChatColor.GOLD}パスワードを設定しました"
+            sound = Sound.BLOCK_ANVIL_USE
+            passWordManager.set(id, password)
+        }
+        player.sendMessage(message)
+        player.playSound(player, sound, 1f, 1f)
+    }
+
+    private fun releaseCommand(player: Player, id: String, password: String) {
+        val message: String
+        val sound: Sound
+        if (passWordManager.auth(id, password)) {
+            message = "${ChatColor.DARK_RED}パスワードを解除しました"
+            sound = Sound.BLOCK_ANVIL_USE
+            passWordManager.delete(id)
+        } else {
+            message = "${ChatColor.RED}パスワードが違います"
+            sound = Sound.BLOCK_NOTE_BLOCK_BELL
+        }
+        player.sendMessage(message)
+        player.playSound(player, sound, 1f, 1f)
     }
 
     private fun sendEntryPassWord(player: Player) {
