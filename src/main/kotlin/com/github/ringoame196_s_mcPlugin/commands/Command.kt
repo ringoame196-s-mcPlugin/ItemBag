@@ -22,6 +22,7 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
             sender.sendMessage(message)
             return true
         }
+        if (args.isEmpty()) return false
 
         val subCommand = args[0]
         when (subCommand) {
