@@ -45,7 +45,14 @@ configure<BukkitPluginDescription> {
     commands {
         register("itembag") {
             description = "ItemBag用コマンド"
-            usage = "/itembag <give,open,pass,release>"
+            usage = "/itembag <give,open,pass,release> [<password>]"
+        }
+    }
+
+    permissions{
+        register("itemBag.op") {
+            description = "itemBag giveを使うための権限"
+            default = BukkitPluginDescription.Permission.Default.OP // TRUE, FALSE, OP or NOT_OP
         }
     }
 }

@@ -36,6 +36,12 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     }
 
     private fun giveCommand(player: Player, args: Array<out String>) {
+        if (!player.hasPermission("itemBag.op")) {
+            val message = "${ChatColor.RED}権限がありません"
+            player.sendMessage(message)
+            return
+        }
+
         val selectPlayers = if (args.size > 1) Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>().toMutableList()
         else mutableListOf(player)
 
