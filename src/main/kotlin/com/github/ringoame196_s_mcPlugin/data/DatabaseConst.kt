@@ -1,6 +1,6 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.data
 
-object DataBaseConst {
+object DatabaseConst {
     const val ITEMS_TABLE = "items"
     const val PASSWORDS_TABLE = "passwords"
 

@@ -1,5 +1,7 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.manager
 
+import com.github.ringoame196_s_mcPlugin.data.Data
+import com.github.ringoame196_s_mcPlugin.data.ItemStorage
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -13,8 +15,8 @@ import org.bukkit.plugin.Plugin
 import java.util.UUID
 
 class ItemBagManager(plugin: Plugin) {
-    private val passwordManager = PasswordManager(plugin)
-    private val itemStorageManager = ItemStorageManager(plugin)
+    private val itemBagPasswordManager = ItemBagPasswordManager(plugin)
+    private val itemStorage = ItemStorage(plugin)
     private val material = Material.BARREL
     private val name = "${ChatColor.GOLD}アイテムバッグ"
     private val idKey = NamespacedKey(plugin, "bag_id")
@@ -48,13 +50,13 @@ class ItemBagManager(plugin: Plugin) {
         } else {
             val inventory = Bukkit.createInventory(null, guiSize, guiName)
             Data.bagCashInventory[id] = inventory
-            itemStorageManager.load(id, inventory)
+            itemStorage.load(id, inventory)
             return inventory
         }
     }
 
     fun openInv(player: Player, id: String, password: String? = null) {
-        if (!passwordManager.auth(id, password)) {
+        if (!itemBagPasswordManager.auth(id, password)) {
             val message = "${ChatColor.RED}ロックがかかっています"
             val sound = Sound.BLOCK_CHEST_LOCKED
             player.sendMessage(message)
@@ -74,7 +76,7 @@ class ItemBagManager(plugin: Plugin) {
         val sound = Sound.BLOCK_BARREL_CLOSE
         player.playSound(player, sound, 1f, 1f)
         Data.openBagInventory.remove(uuid)
-        itemStorageManager.save(id, inventory)
+        itemStorage.save(id, inventory)
     }
 
     fun isBagInventory(inventoryTitle: String): Boolean {

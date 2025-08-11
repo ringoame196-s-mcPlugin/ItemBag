@@ -1,7 +1,7 @@
 package com.github.ringoame196_s_mcPlugin
 
 import com.github.ringoame196_s_mcPlugin.commands.Command
-import com.github.ringoame196_s_mcPlugin.events.ItemBagEvents
+import com.github.ringoame196_s_mcPlugin.events.ItemBagListener
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
@@ -9,7 +9,7 @@ class Main : JavaPlugin() {
     override fun onEnable() {
         super.onEnable()
         saveResource("data.db", false)
-        server.pluginManager.registerEvents(ItemBagEvents(plugin), plugin)
+        server.pluginManager.registerEvents(ItemBagListener(plugin), plugin)
         val command = getCommand("itembag")
         command!!.setExecutor(Command(plugin))
     }

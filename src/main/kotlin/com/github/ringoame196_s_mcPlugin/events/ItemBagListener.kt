@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.events
 
-import com.github.ringoame196_s_mcPlugin.ItemBagManager
+import com.github.ringoame196_s_mcPlugin.manager.ItemBagManager
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.plugin.Plugin
 
-class ItemBagEvents(plugin: Plugin) : Listener {
+class ItemBagListener(plugin: Plugin) : Listener {
     private val itemBagManager = ItemBagManager(plugin)
 
     @EventHandler

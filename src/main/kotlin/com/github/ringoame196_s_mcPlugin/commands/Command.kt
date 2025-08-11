@@ -1,7 +1,7 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
-import com.github.ringoame196_s_mcPlugin.ItemBagManager
-import com.github.ringoame196_s_mcPlugin.PasswordManager
+import com.github.ringoame196_s_mcPlugin.manager.ItemBagManager
+import com.github.ringoame196_s_mcPlugin.manager.ItemBagPasswordManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin
 
 class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     private val itemBagManager = ItemBagManager(plugin)
-    private val passWordManager = PasswordManager(plugin)
+    private val passWordManagerItemBag = ItemBagPasswordManager(plugin)
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
@@ -102,13 +102,13 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     private fun passCommand(player: Player, id: String, password: String) {
         val message: String
         val sound: Sound
-        if (passWordManager.isLock(id)) {
+        if (passWordManagerItemBag.isLock(id)) {
             message = "${ChatColor.RED}既にパスワードがかかっています"
             sound = Sound.BLOCK_NOTE_BLOCK_BELL
         } else {
             message = "${ChatColor.GOLD}パスワードを設定しました"
             sound = Sound.BLOCK_ANVIL_USE
-            passWordManager.set(id, password)
+            passWordManagerItemBag.set(id, password)
         }
         player.sendMessage(message)
         player.playSound(player, sound, 1f, 1f)
@@ -117,10 +117,10 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     private fun releaseCommand(player: Player, id: String, password: String) {
         val message: String
         val sound: Sound
-        if (passWordManager.auth(id, password)) {
+        if (passWordManagerItemBag.auth(id, password)) {
             message = "${ChatColor.DARK_RED}パスワードを解除しました"
             sound = Sound.BLOCK_ANVIL_USE
-            passWordManager.delete(id)
+            passWordManagerItemBag.delete(id)
         } else {
             message = "${ChatColor.RED}パスワードが違います"
             sound = Sound.BLOCK_NOTE_BLOCK_BELL

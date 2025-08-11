@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.data
 
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
@@ -7,7 +7,7 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.SQLException
 
-class DataBaseManager(plugin: Plugin) {
+class DatabaseManager(plugin: Plugin) {
     private val dbFilePath = "${plugin.dataFolder.path}/data.db"
 
     /**

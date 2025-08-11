@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.data
 
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
