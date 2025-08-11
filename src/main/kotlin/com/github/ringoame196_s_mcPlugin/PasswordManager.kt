@@ -4,9 +4,8 @@ import org.bukkit.plugin.Plugin
 import java.security.MessageDigest
 
 class PasswordManager(plugin: Plugin) {
-    private val dbFilePath = "${plugin.dataFolder.path}/data.db"
     private val table = DataBaseConst.PASSWORDS_TABLE
-    private val dataBaseManager = DataBaseManager(dbFilePath)
+    private val dataBaseManager = DataBaseManager(plugin)
 
     fun set(id: String, password: String) {
         val hashPassword = hashSHA256(password)
