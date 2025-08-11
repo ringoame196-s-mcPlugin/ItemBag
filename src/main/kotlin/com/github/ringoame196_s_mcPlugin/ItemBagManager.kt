@@ -14,6 +14,7 @@ import java.util.UUID
 
 class ItemBagManager(plugin: Plugin) {
     private val passwordManager = PasswordManager(plugin)
+    private val itemStorageManager = ItemStorageManager(plugin)
     private val material = Material.BARREL
     private val name = "${ChatColor.GOLD}アイテムバッグ"
     private val idKey = NamespacedKey(plugin, "bag_id")
@@ -47,6 +48,7 @@ class ItemBagManager(plugin: Plugin) {
         } else {
             val inventory = Bukkit.createInventory(null, guiSize, guiName)
             Data.bagCashInventory[id] = inventory
+            itemStorageManager.load(id, inventory)
             return inventory
         }
     }
@@ -66,12 +68,13 @@ class ItemBagManager(plugin: Plugin) {
         Data.openBagInventory[player.uniqueId] = id
     }
 
-    fun closeInv(player: Player) {
+    fun closeInv(player: Player, inventory: Inventory) {
         val uuid = player.uniqueId
-        val id = Data.openBagInventory[uuid]
+        val id = Data.openBagInventory[uuid] ?: return
         val sound = Sound.BLOCK_BARREL_CLOSE
         player.playSound(player, sound, 1f, 1f)
         Data.openBagInventory.remove(uuid)
+        itemStorageManager.save(id, inventory)
     }
 
     fun isBagInventory(inventoryTitle: String): Boolean {

@@ -23,8 +23,9 @@ class ItemBagEvents(plugin: Plugin) : Listener {
     @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player
-        val inventoryTitle = e.view.title
-        if (!itemBagManager.isBagInventory(inventoryTitle)) return
-        itemBagManager.closeInv(player as Player)
+        val inventory = e.inventory
+        val viewTitle = e.view.title
+        if (!itemBagManager.isBagInventory(viewTitle)) return
+        itemBagManager.closeInv(player as Player, inventory)
     }
 }
