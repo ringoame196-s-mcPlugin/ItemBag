@@ -26,8 +26,11 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
         val subCommand = args[0]
         when (subCommand) {
             CommandConst.GIVE_COMMAND -> giveCommand(sender, args)
+            CommandConst.OPEN_COMMAND -> {
+                val id = getBagID(sender)
+                if (id != null) itemBagManager.openInv(sender, id)
+            }
         }
-
         return true
     }
 
@@ -73,13 +76,13 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
     }
 
     private fun processPasswordInput(player: Player, args: Array<out String>) {
-        val subCommand = args[0]
         val password = args[1]
         if (password.isEmpty()) {
             // パスワード記入案内
             sendEntryPassWord(player)
         } else if (password[password.length - 1] == '/') {
             // パスワード入力終了
+            val subCommand = args[0]
             entryPassWord(player, subCommand, password.replace("/", ""))
         }
     }
@@ -91,14 +94,7 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
         player.sendMessage(message)
         player.playSound(player, sound, 1f, 1f)
 
-        val item = player.inventory.itemInHand
-        val id = itemBagManager.getBagID(item)
-
-        if (id == null) {
-            val message = "${ChatColor.RED}バッグをメインハンドに持ちコマンドを実行してください"
-            player.sendMessage(message)
-            return
-        }
+        val id = getBagID(player) ?: return
 
         when (subCommand) {
             CommandConst.PASS_COMMAND -> {
@@ -122,6 +118,7 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
                     player.sendMessage(message)
                 }
             }
+            CommandConst.OPEN_COMMAND -> itemBagManager.openInv(player, id, password)
         }
     }
 
@@ -132,5 +129,17 @@ class Command(plugin: Plugin) : CommandExecutor, TabCompleter {
             "${ChatColor.YELLOW}パスワードを入力し、最後に「/」を付けてください、\n" +
             "${ChatColor.RED}そのままEnterは押さないでください"
         player.sendMessage(message)
+    }
+
+    private fun getBagID(player: Player): String? {
+        val item = player.inventory.itemInMainHand
+        val id = itemBagManager.getBagID(item)
+
+        if (id == null) {
+            val message = "${ChatColor.RED}バッグをメインハンドに持ちコマンドを実行してください"
+            player.sendMessage(message)
+            return null
+        }
+        return id
     }
 }
